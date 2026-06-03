@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     async function findWorkingDomain(quality) {
       for (let i = 1; i <= 45; i++) {
         const num = String(i).padStart(2, "0");
-        const domain = `https://${num}.teha416.online/`;
+        const domain = `https://${num}.yadev511.xyz/`;
         const testUrl = domain + cleanName.replace(".mp4", `${quality}.mp4`);
 
         try {
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
         }
       }
       // fallback to 01 if nothing found
-      return `https://01.teha416.online/${cleanName.replace(".mp4", `${quality}.mp4`)}`;
+      return `https://01.yadev511.xyz/${cleanName.replace(".mp4", `${quality}.mp4`)}`;
     }
 
     // Run all quality checks in parallel
