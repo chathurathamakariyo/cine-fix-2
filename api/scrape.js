@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ status: false, message: "No manual link" });
     }
 
-    const baseDownload = "https://cine-fix.vercel.app/api/download?url=";
+    const baseDownload = "https://cine-fix-2.vercel.app/api/download?url=";
 
     // filename + clean name
     let fileName = decodeURIComponent(manual.split("/").pop());
