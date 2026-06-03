@@ -10,21 +10,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 🔥 HEAD request先 - file size ganna
-    let contentLength = null;
-    try {
-      const headRes = await fetch(url, {
-        method: "HEAD",
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-          "Referer": "https://cinesubz.lk/",
-          "Origin": "https://cinesubz.lk"
-        }
-      });
-      contentLength = headRes.headers.get("content-length");
-    } catch (_) {}
-
-    // GET request
     const response = await fetch(url, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -37,10 +22,9 @@ export default async function handler(req, res) {
       return res.status(500).send("Failed to fetch file");
     }
 
-    // GET response ekenwath ganna - HEAD eken natha nam
-    if (!contentLength) {
-      contentLength = response.headers.get("content-length");
-    }
+    // 🔥 Full buffer - size exact danna
+    const buffer = await response.buffer();
+    const fileSize = buffer.length;
 
     // filename clean
     let fileName = decodeURIComponent(url.split("/").pop() || "video.mp4");
@@ -51,24 +35,15 @@ export default async function handler(req, res) {
       .replace(/[^a-zA-Z0-9()._-]/g, "");
     fileName = `[Chdev]${fileName}`;
 
-    // Headers
     res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
     res.setHeader("Content-Type", "video/mp4");
     res.setHeader("Accept-Ranges", "bytes");
-
-    if (contentLength) {
-      res.setHeader("Content-Length", contentLength);
-      res.setHeader("X-File-Size", contentLength);
-    } else {
-      res.setHeader("X-File-Size", "unknown");
-    }
-
-    // CORS headers
+    res.setHeader("Content-Length", fileSize);
+    res.setHeader("X-File-Size", fileSize);
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Expose-Headers", "Content-Length, X-File-Size");
 
-    // Stream
-    response.body.pipe(res);
+    res.send(buffer);
 
   } catch (err) {
     console.error("DOWNLOAD ERROR:", err);
