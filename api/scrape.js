@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     async function findWorkingDomain(quality) {
       for (let i = 1; i <= 45; i++) {
         const num = String(i).padStart(2, "0");
-        const domain = `https://${num}.yadev511.xyz/`;
+        const domain = `https://bot${num}.shenaya66.online/`;
         const testUrl = domain + cleanName.replace(".mp4", `${quality}.mp4`);
 
         try {
